@@ -7,6 +7,13 @@ import java.util.Map;
 import com.rest.tutorials.messanserInRest.database.DatabaseClass;
 import com.rest.tutorials.messanserInRest.model.Message;
 
+/**
+ * this class is kind of stub class which will have connection to database and
+ * fetch/post values from/to there
+ * 
+ * @author ketan
+ *
+ */
 public class MessageService {
 
 	private Map<Long, Message> messages = DatabaseClass.getMessages();
