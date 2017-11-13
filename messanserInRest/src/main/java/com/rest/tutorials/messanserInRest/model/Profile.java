@@ -2,6 +2,9 @@ package com.rest.tutorials.messanserInRest.model;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Profile {
 	private long id;
 	private String profileName;
