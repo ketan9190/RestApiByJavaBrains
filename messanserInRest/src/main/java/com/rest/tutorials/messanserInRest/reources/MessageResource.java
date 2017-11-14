@@ -10,6 +10,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.rest.tutorials.messanserInRest.model.Message;
@@ -32,9 +33,24 @@ public class MessageResource {
 			// therefore we need to mention which HTTP method correspond to this
 			// method
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Message> getMessages() {
+	public List<Message> getMessages(@QueryParam("year") int year, @QueryParam("start") int start,
+			@QueryParam("size") int size) {// @QueryParam is used to capture the
+											// query param in url
+
+		if (year > 0) {
+			return service.getAllMessagesForYear(year);
+		} else if (start > 0 && size > 0) {
+			return service.getAllMessagesPaginated(start, size);
+		}
 		return service.getAllMessages();
 	}
+
+	/*in case of @BeanParam above method will look like 
+	getMessages(@BeanParam MessageFilterBean bean){
+		if(bean.getYear()>0)
+			.
+			.
+	}*/
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

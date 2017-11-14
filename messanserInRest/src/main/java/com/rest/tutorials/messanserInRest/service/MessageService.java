@@ -1,6 +1,7 @@
 package com.rest.tutorials.messanserInRest.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,27 @@ public class MessageService {
 
 	public List<Message> getAllMessages() {
 		return new ArrayList<Message>(messages.values());
+	}
+
+	// for filtering based on year
+	public List<Message> getAllMessagesForYear(int year) {
+		List<Message> messageListForYear = new ArrayList<Message>();
+		Calendar cal = Calendar.getInstance();
+		for (Message msg : messages.values()) {
+			cal.setTime(msg.getCreated());
+			if (cal.get(Calendar.YEAR) == year) {
+				messageListForYear.add(msg);
+			}
+		}
+		return messageListForYear;
+	}
+
+	// for pagination
+	public List<Message> getAllMessagesPaginated(int start, int size) {
+		List<Message> newList = new ArrayList<Message>(messages.values());
+		if (start + size > newList.size())
+			return null;
+		return newList.subList(start, start + size);
 	}
 
 	public Message getMessage(long id) {
