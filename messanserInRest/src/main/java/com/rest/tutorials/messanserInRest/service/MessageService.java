@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.rest.tutorials.messanserInRest.database.DatabaseClass;
+import com.rest.tutorials.messanserInRest.exception.DataNotFoundException;
 import com.rest.tutorials.messanserInRest.model.Message;
 
 /**
@@ -52,6 +53,10 @@ public class MessageService {
 	}
 
 	public Message getMessage(long id) {
+		Message message = messages.get(id);
+		if (message == null) {
+			throw new DataNotFoundException("Message with id :" + id + " not found");
+		}
 		return messages.get(id);
 	}
 
