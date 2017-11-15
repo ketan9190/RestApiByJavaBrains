@@ -35,7 +35,18 @@ public class MessageResource {
 	@GET // - as we know there might be many method called for the same resource
 			// therefore we need to mention which HTTP method correspond to this
 			// method
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_JSON }) // whatever
+																	// mentioned
+																	// first
+																	// will be
+																	// returned
+																	// by
+																	// default
+																	// unless
+																	// Specified
+																	// in Accept
+																	// header in
+																	// request
 	public List<Message> getMessages(@QueryParam("year") int year, @QueryParam("start") int start,
 			@QueryParam("size") int size) {// @QueryParam is used to capture the
 											// query param in url
@@ -58,10 +69,28 @@ public class MessageResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{messageid}")
-	public Message getMessage(@PathParam("messageid") long id) {
+	public Message getMessage(@PathParam("messageid") long id, @Context UriInfo uri) {
+		Message message = service.getMessage(id);
+		message.addLink(getSelfUri(uri, message), "self");
+		message.addLink(getProfileUri(uri, message), "profile");
+		// message.addLink(getCommentUri(uri, message), "profile");
 
-		return service.getMessage(id);
+		return message;
 
+	}
+
+	/*private String getCommentUri(UriInfo uri, Message message) {
+		return uri.getBaseUriBuilder().path(MessageResource.class).path(MessageResource.class, "getCommentResource")
+				.path(CommentResource.class).resolveTemplate("messageid", message.getId()).build().toString();
+	}*/
+
+	private String getProfileUri(UriInfo uri, Message message) {
+		return uri.getBaseUriBuilder().path(ProfileResource.class).path(message.getAuthor()).build().toString();
+	}
+
+	private String getSelfUri(UriInfo uri, Message message) {
+		return uri.getBaseUriBuilder().path(MessageResource.class).path(Long.toString(message.getId())).build()
+				.toString();
 	}
 
 	/*@POST
